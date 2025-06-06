@@ -93,6 +93,22 @@ func (v *Vector[T]) PoPFront() (T, bool) {
 	return item, true
 }
 
+func (v *Vector[T]) Inesert(index int, item T) error {
+	if index < 0 || index > len(v.data) {
+		return fmt.Errorf("index out of bounds: %d", index)
+	}
+	v.data = append(v.data[:index], append([]T{item}, v.data[index:]...)...)
+	return nil
+}
+
+func (v *Vector[T]) Erase(index int) error {
+	if index < 0 || index > len(v.data) {
+		return fmt.Errorf("index out of bounds: %d", index)
+	}
+	v.data = append(v.data[:index], v.data[index+1:]...)
+	return nil
+}
+
 func (v *Vector[T]) Size() int {
 	return len(v.data)
 }
