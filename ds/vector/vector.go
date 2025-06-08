@@ -158,6 +158,26 @@ func (v *Vector[T]) ShrinkToFit() {
 	v.data = data
 }
 
+// // search item in vector and return index
+// func (v *Vector[T]) IndexOf(item T) int {
+// 	for i, vItem := range v.data {
+// 		if vItem == item {
+// 			return i
+// 		}
+// 	}
+// 	return -1
+// }
+
+// // search item in vector and return true if exists
+// func (v *Vector[T]) Contains(item T) bool {
+// 	for _, vItem := range v.data {
+// 		if vItem == item {
+// 			return true
+// 		}
+// 	}
+// 	return false
+// }
+
 // search item in vector
 func (v *Vector[T]) At(index int) (T, error) {
 	if index < 0 || index >= len(v.data) {
