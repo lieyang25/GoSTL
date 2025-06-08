@@ -151,14 +151,22 @@ func (v *Vector[T]) Data() []T {
 	return v.data
 }
 
+// return size
 func (v *Vector[T]) Size() int {
 	return len(v.data)
 }
 
+// return cap
 func (v *Vector[T]) Capacity() int {
 	return cap(v.data)
 }
 
+//return true if vector is empty
 func (v *Vector[T]) IsEmpty() bool {
 	return len(v.data) == 0
+}
+
+// clear the vector
+func (v *Vector[T]) Clear() {
+	v.data = make([]T, 0, cap(v.data))
 }
