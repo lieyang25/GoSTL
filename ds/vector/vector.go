@@ -5,7 +5,6 @@ import "fmt"
 // select Options for vector
 type Options struct {
 	InitialCapacity int
-	GrowFactor      float64
 }
 
 // OptionFuncs is a function that modifies the Options struct
@@ -14,7 +13,6 @@ type OptionFuncs func(*Options)
 func NewOptions(opts ...OptionFuncs) *Options {
 	options := &Options{
 		InitialCapacity: 0,
-		GrowFactor:      1.25,
 	}
 
 	for _, opt := range opts {
@@ -29,9 +27,6 @@ func (o *Options) Validate() error {
 	if o.InitialCapacity < 0 {
 		return fmt.Errorf("initial cap cannot be negative : %d", o.InitialCapacity)
 	}
-	if o.GrowFactor <= 1.0 {
-		return fmt.Errorf("grow factor must be greater than 1 : %f", o.GrowFactor)
-	}
 	return nil
 }
 
@@ -39,13 +34,6 @@ func (o *Options) Validate() error {
 func WithInitialCapacity(capacity int) OptionFuncs {
 	return func(opts *Options) {
 		opts.InitialCapacity = capacity
-	}
-}
-
-//set growfactor for vector
-func WithGrowFactor(factor float64) OptionFuncs {
-	return func(opts *Options) {
-		opts.GrowFactor = factor
 	}
 }
 
@@ -89,7 +77,7 @@ func (v *Vector[T]) PushFront(item T) {
 }
 
 // pop item back from vector
-func (v *Vector[T]) PoPBack() (T, bool) {
+func (v *Vector[T]) PopBack() (T, bool) {
 	if len(v.data) == 0 {
 		var zero T
 		return zero, false
@@ -100,7 +88,7 @@ func (v *Vector[T]) PoPBack() (T, bool) {
 }
 
 // pop item front from vector
-func (v *Vector[T]) PoPFront() (T, bool) {
+func (v *Vector[T]) PopFront() (T, bool) {
 	if len(v.data) == 0 {
 		var zero T
 		return zero, false
@@ -111,7 +99,7 @@ func (v *Vector[T]) PoPFront() (T, bool) {
 }
 
 // insert item at specific index
-func (v *Vector[T]) Inesert(index int, item T) error {
+func (v *Vector[T]) Insert(index int, item T) error {
 	if index < 0 || index > len(v.data) {
 		return fmt.Errorf("index out of bounds: %d", index)
 	}
@@ -120,7 +108,7 @@ func (v *Vector[T]) Inesert(index int, item T) error {
 }
 
 // insert a range of items at specific index
-func (v *Vector[T]) InesertRange(index int, items []T) error {
+func (v *Vector[T]) InsertRange(index int, items []T) error {
 	if index < 0 || index >= len(v.data) {
 		return fmt.Errorf("index out of bounds: %d", index)
 	}
@@ -156,9 +144,7 @@ func (v *Vector[T]) Reserve(capacity int) {
 		return
 	}
 	data := make([]T, v.Size(), capacity)
-	for i := 0; i < len(v.data); i++ {
-		data[i] = v.data[i]
-	}
+	copy(data, v.data)
 	v.data = data
 }
 
