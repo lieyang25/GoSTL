@@ -150,6 +150,31 @@ func (v *Vector[T]) EraseRange(start, end int) error {
 	return nil
 }
 
+// makes a new space for the vector with passed capacity
+func (v *Vector[T]) Reserve(capacity int) {
+	if cap(v.data) >= capacity {
+		return
+	}
+	data := make([]T, v.Size(), capacity)
+	for i := 0; i < len(v.data); i++ {
+		data[i] = v.data[i]
+	}
+	v.data = data
+}
+
+// shrinks the capacity of the vector to the fit size
+func (v *Vector[T]) ShrinkToFit() {
+	if len(v.data) == cap(v.data) {
+		return
+	}
+	len := v.Size()
+	data := make([]T, len, len)
+	for i := 0; i < len; i++ {
+		data[i] = v.data[i]
+	}
+	v.data = data
+}
+
 // search item in vector
 func (v *Vector[T]) At(index int) (T, error) {
 	if index < 0 || index >= len(v.data) {
