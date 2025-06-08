@@ -167,11 +167,8 @@ func (v *Vector[T]) ShrinkToFit() {
 	if len(v.data) == cap(v.data) {
 		return
 	}
-	len := v.Size()
-	data := make([]T, len, len)
-	for i := 0; i < len; i++ {
-		data[i] = v.data[i]
-	}
+	data := make([]T, len(v.data))
+	copy(data, v.data)
 	v.data = data
 }
 
@@ -234,4 +231,37 @@ func (v *Vector[T]) IsEmpty() bool {
 // clear the vector
 func (v *Vector[T]) Clear() {
 	v.data = make([]T, 0, cap(v.data))
+}
+
+// resize
+func (v *Vector[T]) Resize(size int) {
+	if size >= v.Size() {
+		return
+	}
+	v.data = v.data[:size]
+}
+
+// clone vector
+func (v *Vector[T]) Clone() *Vector[T] {
+	clone := &Vector[T]{
+		data: make([]T, len(v.data), cap(v.data)),
+	}
+	copy(clone.data, v.data)
+	return clone
+}
+
+// print string
+func (v *Vector[T]) String() string {
+	if v.IsEmpty() {
+		return "[]"
+	}
+	result := "["
+	for i, item := range v.data {
+		result += fmt.Sprintf("%v", item)
+		if i < len(v.data)-1 {
+			result += ", "
+		}
+	}
+	result += "]"
+	return result
 }
