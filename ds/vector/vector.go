@@ -14,7 +14,7 @@ type OptionFuncs func(*Options)
 func NewOptions(opts ...OptionFuncs) *Options {
 	options := &Options{
 		InitialCapacity: 0,
-		GrowFactor:      1.5,
+		GrowFactor:      1.25,
 	}
 
 	for _, opt := range opts {
@@ -24,6 +24,7 @@ func NewOptions(opts ...OptionFuncs) *Options {
 	return options
 }
 
+// check options for vector
 func (o *Options) Validate() error {
 	if o.InitialCapacity < 0 {
 		return fmt.Errorf("initial cap cannot be negative : %d", o.InitialCapacity)
@@ -107,6 +108,47 @@ func (v *Vector[T]) Erase(index int) error {
 	}
 	v.data = append(v.data[:index], v.data[index+1:]...)
 	return nil
+}
+
+// search item in vector
+func (v *Vector[T]) At(index int) (T, error) {
+	if index < 0 || index >= len(v.data) {
+		var zero T
+		return zero, fmt.Errorf("index out of bounds: %d", index)
+	}
+	return v.data[index], nil
+}
+
+// set item at specific index
+func (v *Vector[T]) Set(index int, item T) error {
+	if index < 0 || index >= len(v.data) {
+		return fmt.Errorf("index out of bounds: %d", index)
+	}
+	v.data[index] = item
+	return nil
+}
+
+// search item front
+func (v *Vector[T]) Front() (T, error) {
+	if len(v.data) == 0 {
+		var zero T
+		return zero, fmt.Errorf("vector is empty")
+	}
+	return v.data[0], nil
+}
+
+// serach item back
+func (v *Vector[T]) Back() (T, error) {
+	if len(v.data) == 0 {
+		var zero T
+		return zero, fmt.Errorf("vector is empty")
+	}
+	return v.data[len(v.data)-1], nil
+}
+
+// Data returns the underlying slice of the vector
+func (v *Vector[T]) Data() []T {
+	return v.data
 }
 
 func (v *Vector[T]) Size() int {
