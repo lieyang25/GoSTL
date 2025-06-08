@@ -66,6 +66,18 @@ func New[T any](opts ...OptionFuncs) *Vector[T] {
 	}
 }
 
+// create a new vector from another vector
+func NewFromVector[T any](other *Vector[T]) *Vector[T] {
+	if other == nil {
+		return New[T]()
+	}
+	v := &Vector[T]{
+		data: make([]T, len(other.data), cap(other.data)),
+	}
+	copy(v.data, other.data)
+	return v
+}
+
 // push item back to vector
 func (v *Vector[T]) PushBack(item T) {
 	v.data = append(v.data, item)
