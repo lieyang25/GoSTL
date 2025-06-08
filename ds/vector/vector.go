@@ -66,14 +66,17 @@ func New[T any](opts ...OptionFuncs) *Vector[T] {
 	}
 }
 
+// push item back to vector
 func (v *Vector[T]) PushBack(item T) {
 	v.data = append(v.data, item)
 }
 
+// push item front to vector
 func (v *Vector[T]) PushFront(item T) {
 	v.data = append([]T{item}, v.data...)
 }
 
+// pop item back from vector
 func (v *Vector[T]) PoPBack() (T, bool) {
 	if len(v.data) == 0 {
 		var zero T
@@ -84,6 +87,7 @@ func (v *Vector[T]) PoPBack() (T, bool) {
 	return item, true
 }
 
+// pop item front from vector
 func (v *Vector[T]) PoPFront() (T, bool) {
 	if len(v.data) == 0 {
 		var zero T
@@ -94,6 +98,7 @@ func (v *Vector[T]) PoPFront() (T, bool) {
 	return item, true
 }
 
+// insert item at specific index
 func (v *Vector[T]) Inesert(index int, item T) error {
 	if index < 0 || index > len(v.data) {
 		return fmt.Errorf("index out of bounds: %d", index)
@@ -102,11 +107,34 @@ func (v *Vector[T]) Inesert(index int, item T) error {
 	return nil
 }
 
+// insert a range of items at specific index
+func (v *Vector[T]) InesertRange(index int, items []T) error {
+	if index < 0 || index >= len(v.data) {
+		return fmt.Errorf("index out of bounds: %d", index)
+	}
+
+	if len(items) == 0 {
+		return nil // nothing to insert
+	}
+	v.data = append(v.data[:index], append(items, v.data[index:]...)...)
+	return nil
+}
+
+// erase item at specific index
 func (v *Vector[T]) Erase(index int) error {
 	if index < 0 || index > len(v.data) {
 		return fmt.Errorf("index out of bounds: %d", index)
 	}
 	v.data = append(v.data[:index], v.data[index+1:]...)
+	return nil
+}
+
+// erase a range of items from the vector
+func (v *Vector[T]) EraseRange(start, end int) error {
+	if start < 0 || end > len(v.data) || start >= end {
+		return fmt.Errorf("invalid range: %d to %d", start, end)
+	}
+	v.data = append(v.data[:start], v.data[end:]...)
 	return nil
 }
 
