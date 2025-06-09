@@ -42,7 +42,8 @@ type Vector[T any] struct {
 }
 
 // New create a new vector with options
-func New[T any](opts ...OptionFuncs) *Vector[T] {
+// you can use WithInitialCapacity to set the initial capacity
+func NewVector[T any](opts ...OptionFuncs) *Vector[T] {
 	options := NewOptions(opts...)
 
 	if err := options.Validate(); err != nil {
@@ -57,7 +58,7 @@ func New[T any](opts ...OptionFuncs) *Vector[T] {
 // create a new vector from another vector
 func NewFromVector[T any](other *Vector[T]) *Vector[T] {
 	if other == nil {
-		return New[T]()
+		return NewVector[T]()
 	}
 	v := &Vector[T]{
 		data: make([]T, len(other.data), cap(other.data)),
