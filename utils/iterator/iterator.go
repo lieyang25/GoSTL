@@ -3,9 +3,9 @@ package iterator
 // Iterator is an basic iterator
 type ConstIterator[T any] interface {
 	HasNext() bool
-	Next() bool
+	Next() ConstIterator[T]
 	Value() T
-	Clone() bool
+	Clone() ConstIterator[T]
 	Equal(other ConstIterator[T]) bool
 }
 
