@@ -159,26 +159,6 @@ func (v *Vector[T]) ShrinkToFit() {
 	v.data = data
 }
 
-// // search item in vector and return index
-// func (v *Vector[T]) IndexOf(item T) int {
-// 	for i, vItem := range v.data {
-// 		if vItem == item {
-// 			return i
-// 		}
-// 	}
-// 	return -1
-// }
-
-// // search item in vector and return true if exists
-// func (v *Vector[T]) Contains(item T) bool {
-// 	for _, vItem := range v.data {
-// 		if vItem == item {
-// 			return true
-// 		}
-// 	}
-// 	return false
-// }
-
 // search item in vector
 func (v *Vector[T]) At(index int) (T, error) {
 	if index < 0 || index >= len(v.data) {
@@ -240,14 +220,6 @@ func (v *Vector[T]) Clear() {
 	v.data = make([]T, 0, cap(v.data))
 }
 
-// resize
-func (v *Vector[T]) Resize(size int) {
-	if size >= v.Size() {
-		return
-	}
-	v.data = v.data[:size]
-}
-
 // clone vector
 func (v *Vector[T]) Clone() *Vector[T] {
 	clone := &Vector[T]{
@@ -271,4 +243,26 @@ func (v *Vector[T]) String() string {
 	}
 	result += "]"
 	return result
+}
+
+func (v *Vector[T]) IterAt(index int) *VectorIterator[T] {
+	return &VectorIterator[T]{vec: v, index: index}
+}
+
+func (v *Vector[T]) Begin() *VectorIterator[T] {
+	return v.IterAt(0)
+}
+
+func (v *Vector[T]) End() *VectorIterator[T] {
+	return v.IterAt(len(v.data))
+}
+
+func (v *Vector[T]) Resize(size int) {
+	if size < 0 {
+		return
+	}
+	if size > cap(v.data) {
+		v.Reserve(size)
+	}
+	v.data = v.data[:size]
 }
