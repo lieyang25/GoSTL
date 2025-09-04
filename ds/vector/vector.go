@@ -25,7 +25,7 @@ func NewOptions(opts ...OptionFuncs) *Options {
 // check options for vector
 func (o *Options) Validate() error {
 	if o.InitialCapacity < 0 {
-		return fmt.Errorf("initial cap cannot be negative : %d", o.InitialCapacity)
+		panic(fmt.Sprintf("initial cap cannot be negative : %d", o.InitialCapacity))
 	}
 	return nil
 }
@@ -102,7 +102,7 @@ func (v *Vector[T]) PopFront() (T, bool) {
 // insert item at specific index
 func (v *Vector[T]) Insert(index int, item T) error {
 	if index < 0 || index > len(v.data) {
-		return fmt.Errorf("index out of bounds: %d", index)
+		panic(fmt.Sprintf("index out of bounds: %d", index))
 	}
 	v.data = append(v.data[:index], append([]T{item}, v.data[index:]...)...)
 	return nil
@@ -111,7 +111,7 @@ func (v *Vector[T]) Insert(index int, item T) error {
 // insert a range of items at specific index
 func (v *Vector[T]) InsertRange(index int, items []T) error {
 	if index < 0 || index >= len(v.data) {
-		return fmt.Errorf("index out of bounds: %d", index)
+		panic(fmt.Sprintf("index out of bounds: %d", index))
 	}
 
 	if len(items) == 0 {
@@ -124,7 +124,7 @@ func (v *Vector[T]) InsertRange(index int, items []T) error {
 // erase item at specific index
 func (v *Vector[T]) Erase(index int) error {
 	if index < 0 || index > len(v.data) {
-		return fmt.Errorf("index out of bounds: %d", index)
+		panic(fmt.Sprintf("index out of bounds: %d", index))
 	}
 	v.data = append(v.data[:index], v.data[index+1:]...)
 	return nil
@@ -133,7 +133,7 @@ func (v *Vector[T]) Erase(index int) error {
 // erase a range of items from the vector
 func (v *Vector[T]) EraseRange(start, end int) error {
 	if start < 0 || end > len(v.data) || start >= end {
-		return fmt.Errorf("invalid range: %d to %d", start, end)
+		panic(fmt.Sprintf("invalid range: %d to %d", start, end))
 	}
 	v.data = append(v.data[:start], v.data[end:]...)
 	return nil
@@ -171,7 +171,7 @@ func (v *Vector[T]) At(index int) (T, error) {
 // set item at specific index
 func (v *Vector[T]) Set(index int, item T) error {
 	if index < 0 || index >= len(v.data) {
-		return fmt.Errorf("index out of bounds: %d", index)
+		panic(fmt.Sprintf("index out of bounds: %d", index))
 	}
 	v.data[index] = item
 	return nil
@@ -186,7 +186,7 @@ func (v *Vector[T]) Front() (T, error) {
 	return v.data[0], nil
 }
 
-// serach item back
+// search item back
 func (v *Vector[T]) Back() (T, error) {
 	if len(v.data) == 0 {
 		var zero T
